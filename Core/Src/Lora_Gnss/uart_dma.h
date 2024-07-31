@@ -35,7 +35,8 @@ typedef struct
     uint16_t yeniPoz_u16;
     uint16_t eskiPoz_u16;
     uint16_t okunanVeriSayisi_u16;
-    uint8_t txCallBack_u8;
+    uint16_t gonderilecekVeriSayisi_u16;
+    uint8_t txCallBackFlag_u8;
 
 }Dma_t;
 

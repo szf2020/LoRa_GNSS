@@ -12,6 +12,7 @@
 #include "stdint.h"
 #include "uart_dma.h"
 #include "protokol.h"
+#include "rtcm_decoder.h"
 
 
 
@@ -32,6 +33,7 @@ typedef struct
 	Dma_t usartDma3_st;
 
 	veri_paketi_t veri_pkt_st;
+	Rtcm_t rtcm_st;
 
 }Global_t;
 

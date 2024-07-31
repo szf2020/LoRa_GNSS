@@ -105,15 +105,15 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if (huart->Instance == USART1)
 	{
-		Glo_st.usartDma1_st.txCallBack_u8 = 1;
+		Glo_st.usartDma1_st.txCallBackFlag_u8 = 1;
 	}
 	if (huart->Instance == USART2)
 	{
-		Glo_st.usartDma2_st.txCallBack_u8 = 1;
+		Glo_st.usartDma2_st.txCallBackFlag_u8 = 1;
 	}
 	if (huart->Instance == USART3)
 	{
-		Glo_st.usartDma3_st.txCallBack_u8 = 1;
+		Glo_st.usartDma3_st.txCallBackFlag_u8 = 1;
 	}
 
 }

@@ -18,6 +18,12 @@ typedef enum {
 } rtcm_state_t;
 
 
+typedef struct
+{
+	uint8_t rtcm_mesaj_geldi_u8;
+	uint8_t rtcm_buffer[1024];
+}Rtcm_t;
+
 uint32_t compute_crc24q(const uint8_t *buffer, int length);
 
 void parse_rtcm_v3_message(uint8_t *data, int data_length);

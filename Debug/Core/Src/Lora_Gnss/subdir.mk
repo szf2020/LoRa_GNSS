@@ -7,21 +7,18 @@
 C_SRCS += \
 ../Core/Src/Lora_Gnss/lora_gnss_main.c \
 ../Core/Src/Lora_Gnss/protokol.c \
-../Core/Src/Lora_Gnss/ringbuffer.c \
 ../Core/Src/Lora_Gnss/rtcm_decoder.c \
 ../Core/Src/Lora_Gnss/uart_dma.c 
 
 OBJS += \
 ./Core/Src/Lora_Gnss/lora_gnss_main.o \
 ./Core/Src/Lora_Gnss/protokol.o \
-./Core/Src/Lora_Gnss/ringbuffer.o \
 ./Core/Src/Lora_Gnss/rtcm_decoder.o \
 ./Core/Src/Lora_Gnss/uart_dma.o 
 
 C_DEPS += \
 ./Core/Src/Lora_Gnss/lora_gnss_main.d \
 ./Core/Src/Lora_Gnss/protokol.d \
-./Core/Src/Lora_Gnss/ringbuffer.d \
 ./Core/Src/Lora_Gnss/rtcm_decoder.d \
 ./Core/Src/Lora_Gnss/uart_dma.d 
 
@@ -33,7 +30,7 @@ Core/Src/Lora_Gnss/%.o Core/Src/Lora_Gnss/%.su Core/Src/Lora_Gnss/%.cyclo: ../Co
 clean: clean-Core-2f-Src-2f-Lora_Gnss
 
 clean-Core-2f-Src-2f-Lora_Gnss:
-	-$(RM) ./Core/Src/Lora_Gnss/lora_gnss_main.cyclo ./Core/Src/Lora_Gnss/lora_gnss_main.d ./Core/Src/Lora_Gnss/lora_gnss_main.o ./Core/Src/Lora_Gnss/lora_gnss_main.su ./Core/Src/Lora_Gnss/protokol.cyclo ./Core/Src/Lora_Gnss/protokol.d ./Core/Src/Lora_Gnss/protokol.o ./Core/Src/Lora_Gnss/protokol.su ./Core/Src/Lora_Gnss/ringbuffer.cyclo ./Core/Src/Lora_Gnss/ringbuffer.d ./Core/Src/Lora_Gnss/ringbuffer.o ./Core/Src/Lora_Gnss/ringbuffer.su ./Core/Src/Lora_Gnss/rtcm_decoder.cyclo ./Core/Src/Lora_Gnss/rtcm_decoder.d ./Core/Src/Lora_Gnss/rtcm_decoder.o ./Core/Src/Lora_Gnss/rtcm_decoder.su ./Core/Src/Lora_Gnss/uart_dma.cyclo ./Core/Src/Lora_Gnss/uart_dma.d ./Core/Src/Lora_Gnss/uart_dma.o ./Core/Src/Lora_Gnss/uart_dma.su
+	-$(RM) ./Core/Src/Lora_Gnss/lora_gnss_main.cyclo ./Core/Src/Lora_Gnss/lora_gnss_main.d ./Core/Src/Lora_Gnss/lora_gnss_main.o ./Core/Src/Lora_Gnss/lora_gnss_main.su ./Core/Src/Lora_Gnss/protokol.cyclo ./Core/Src/Lora_Gnss/protokol.d ./Core/Src/Lora_Gnss/protokol.o ./Core/Src/Lora_Gnss/protokol.su ./Core/Src/Lora_Gnss/rtcm_decoder.cyclo ./Core/Src/Lora_Gnss/rtcm_decoder.d ./Core/Src/Lora_Gnss/rtcm_decoder.o ./Core/Src/Lora_Gnss/rtcm_decoder.su ./Core/Src/Lora_Gnss/uart_dma.cyclo ./Core/Src/Lora_Gnss/uart_dma.d ./Core/Src/Lora_Gnss/uart_dma.o ./Core/Src/Lora_Gnss/uart_dma.su
 
 .PHONY: clean-Core-2f-Src-2f-Lora_Gnss
 

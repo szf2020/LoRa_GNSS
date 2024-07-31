@@ -1,6 +1,5 @@
 "./Core/Src/Lora_Gnss/lora_gnss_main.o"
 "./Core/Src/Lora_Gnss/protokol.o"
-"./Core/Src/Lora_Gnss/ringbuffer.o"
 "./Core/Src/Lora_Gnss/rtcm_decoder.o"
 "./Core/Src/Lora_Gnss/uart_dma.o"
 "./Core/Src/main.o"
