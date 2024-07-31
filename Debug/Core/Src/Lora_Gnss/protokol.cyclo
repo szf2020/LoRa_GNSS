@@ -1,0 +1,3 @@
+../Core/Src/Lora_Gnss/protokol.c:14:6:veri_paketle	10
+../Core/Src/Lora_Gnss/protokol.c:77:9:veri_paket_coz	14
+../Core/Src/Lora_Gnss/protokol.c:175:6:haberlesme_cevrimi	3

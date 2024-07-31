@@ -1,0 +1,2 @@
+../Core/Src/Lora_Gnss/rtcm_decoder.c:15:10:compute_crc24q	4
+../Core/Src/Lora_Gnss/rtcm_decoder.c:34:6:parse_rtcm_v3_message	10

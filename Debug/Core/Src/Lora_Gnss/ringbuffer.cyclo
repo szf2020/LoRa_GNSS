@@ -1,0 +1,5 @@
+../Core/Src/Lora_Gnss/ringbuffer.c:3:6:ringbuffer_yaz	6
+../Core/Src/Lora_Gnss/ringbuffer.c:32:6:ringbuffer_yazma_sayac_arttır	4
+../Core/Src/Lora_Gnss/ringbuffer.c:54:6:ringbuffer_oku_char	6
+../Core/Src/Lora_Gnss/ringbuffer.c:83:6:ringbuffer_oku	6
+../Core/Src/Lora_Gnss/ringbuffer.c:111:6:ringbuffer_okuma_sayac_arttır	4
