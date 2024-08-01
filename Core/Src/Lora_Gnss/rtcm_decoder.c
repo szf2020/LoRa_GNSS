@@ -33,8 +33,7 @@ uint32_t compute_crc24q(const uint8_t *buffer, int length)
 
 
 // RTCM v3 Message Parser State Machine
-void parse_rtcm_v3_message(uint8_t *data, int data_length)
-{
+void parse_rtcm_v3_message(uint8_t *data, int data_length) {
     static rtcm_state_t state = STATE_PREAMBLE;
     static uint16_t length = 0;
     static uint16_t index = 0;
@@ -44,12 +43,10 @@ void parse_rtcm_v3_message(uint8_t *data, int data_length)
     for (int i = 0; i < data_length; i++) {
         uint8_t byte = data[i];
 
-        switch (state)
-        {
+        switch (state) {
             case STATE_PREAMBLE:
             {
-                if (byte == 0xD3)
-                {
+                if (byte == 0xD3) {
                     state = STATE_LENGTH;
                     length = 0;
                     index = 0;
@@ -61,10 +58,13 @@ void parse_rtcm_v3_message(uint8_t *data, int data_length)
 
             case STATE_LENGTH:
             {
-                length = (length << 8) | (byte & 0x03);
+                if (index == 1) {
+                    length = (byte & 0x03) << 8; // İlk byte'ı uzunluğun yüksek 8 bitine yerleştir
+                } else if (index == 2) {
+                    length |= byte; // İkinci byte'ı uzunluğun düşük 8 bitine yerleştir
+                }
                 message[index++] = byte;
-                if (index == 3)
-                {
+                if (index == 3) {
                     state = STATE_MESSAGE;
                 }
                 break;
@@ -73,8 +73,7 @@ void parse_rtcm_v3_message(uint8_t *data, int data_length)
             case STATE_MESSAGE:
             {
                 message[index++] = byte;
-                if (index == (3 + length + 3))
-                {  // 3 bytes header + message length + 3 bytes CRC
+                if (index == (3 + length)) {  // 3 bytes header + message length
                     state = STATE_CRC;
                 }
                 break;
@@ -83,20 +82,15 @@ void parse_rtcm_v3_message(uint8_t *data, int data_length)
             case STATE_CRC:
             {
                 message[index++] = byte;
-                if (index == (3 + length + 3 + 3))
-                {  // 3 bytes header + message length + 3 bytes CRC
+                if (index == (3 + length + 3)) {  // 3 bytes header + message length + 3 bytes CRC
                     crc = (message[index-3] << 16) | (message[index-2] << 8) | message[index-1];
                     uint32_t computed_crc = compute_crc24q(message, 3 + length);
 
-                    if (crc == computed_crc)
-                    {
-
+                    if (crc == computed_crc) {
                         memcpy(Glo_st.rtcm_st.rtcm_buffer, message, index);
                         Glo_st.rtcm_st.rtcm_mesaj_geldi_u8 = 1;
-                    }
-                    else
-                    {
-                    	Glo_st.rtcm_st.rtcm_mesaj_geldi_u8 = 0;
+                    } else {
+                        Glo_st.rtcm_st.rtcm_mesaj_geldi_u8 = 0;
                     }
                     state = STATE_PREAMBLE;
                 }

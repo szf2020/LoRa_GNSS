@@ -34,6 +34,7 @@ typedef struct
 
 	veri_paketi_t veri_pkt_st;
 	Rtcm_t rtcm_st;
+	Lora_t lora_st;
 
 }Global_t;
 

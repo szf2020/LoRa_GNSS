@@ -14,21 +14,13 @@
 
 void veri_paketle( uint8_t *data, uint8_t uzunluk, veri_paketi_t *veri_pkt )
 {
-	static uint8_t durum_u8 = 0;
+	static uint8_t durum_u8 = BASLANGIC_BAYT_1;
 	uint16_t indeks_u16   = 0;
 
-	for( int i = 0; i < DURUM_SAYISI; i++ )
+	for( int i = 1; i < DURUM_SAYISI; i++ )
 	{
 		switch( durum_u8 )
 		{
-			case LORA_KANAL_ATAMA:
-			{
-				veri_pkt->data[indeks_u16++] = 0x00;
-				veri_pkt->data[indeks_u16++] = 0x01;
-				veri_pkt->data[indeks_u16++] = 0x04;
-				durum_u8 =  BASLANGIC_BAYT_1;
-				break;
-			}
 			case BASLANGIC_BAYT_1:
 			{
 				veri_pkt->data[indeks_u16++] = 0x4D;
@@ -61,13 +53,14 @@ void veri_paketle( uint8_t *data, uint8_t uzunluk, veri_paketi_t *veri_pkt )
 			}
 			case CRC_MSB:
 			{
-				uint16_t tCrc_u16 = crc16_ccitt(&veri_pkt->data[3], indeks_u16);
+				uint16_t tCrc_u16 = crc16_ccitt(&veri_pkt->data[3], indeks_u16-3);  //ayrı bir fonksiyon yap LORA başllangıç caseini kaldır
 
 				veri_pkt->data[indeks_u16++]  = ((tCrc_u16 >> 8) & 0xFF);
 				veri_pkt->data[indeks_u16]    = (tCrc_u16 & 0xFF);
 				veri_pkt->crc_u16 = tCrc_u16;
 
 				durum_u8 =  BASLANGIC_BAYT_1;
+				indeks_u16 = 0;
 				break;
 			}
 		}
@@ -75,7 +68,7 @@ void veri_paketle( uint8_t *data, uint8_t uzunluk, veri_paketi_t *veri_pkt )
 }
 
 
-void veri_paket_coz( Dma_t *pDma_st, veri_paketi_t *veri_pkt )
+void veri_paket_coz(Dma_t *pDma_st, veri_paketi_t *veri_pkt )
 {
 	static uint8_t durum_u8  = BASLANGIC_BAYT_1;
 	static uint16_t indeks_u16 = 0;
@@ -147,7 +140,7 @@ void veri_paket_coz( Dma_t *pDma_st, veri_paketi_t *veri_pkt )
 
 				gelenCrcLsb_u8 = tVeri_u8;
 
-				veri_pkt->crc_u16 = ((gelenCrcMsb_u8 << 8) | (gelenCrcLsb_u8));
+				veri_pkt->crc_u16 = (gelenCrcMsb_u8 << 8) | (gelenCrcLsb_u8);
 
 				if(veri_pkt->crc_u16 == crc16_ccitt(veri_pkt->data, indeks_u16))
 				{
@@ -168,7 +161,6 @@ void veri_paket_coz( Dma_t *pDma_st, veri_paketi_t *veri_pkt )
 			}
 		}
 	}
-
 }
 
 
@@ -184,7 +176,25 @@ uint16_t crc16_ccitt(const uint8_t* buffer, size_t size)
 
 
 
-void Lora_veri_gonderme_cevrimi(Dma_t *pDma_st, veri_paketi_t *pVeri_pkt)
+void Lora_paketle(veri_paketi_t *pVeri_pkt, Lora_t *pLora_st)
+{
+	pLora_st->data[0] = 0x00;
+	pLora_st->data[1] = pLora_st->adres_u8;
+	pLora_st->data[2] = pLora_st->kanal_u8;
+
+	for(uint16_t i=0; i < (pVeri_pkt->veri_boyutu_u8+PROTOKOL_FAZLALIK); i++)
+	{
+		pLora_st->data[3+i] = pVeri_pkt->data[i];
+	}
+
+	pLora_st->veri_boyutu_u8 = (pVeri_pkt->veri_boyutu_u8 +
+			                    LORA_E22_FAZLALIK +
+							    PROTOKOL_FAZLALIK);
+}
+
+
+
+void Lora_veri_gonderme_cevrimi(Dma_t *pDma_st, veri_paketi_t *pVeri_pkt, Lora_t *pLora_st)
 {
     uint8_t buffer[PAKETLEME_MAKS_SAYISI + PROTOKOL_FAZLALIK + LORA_E22_FAZLALIK] = {0};
     static uint16_t indeks_u16 = 0;
@@ -196,9 +206,9 @@ void Lora_veri_gonderme_cevrimi(Dma_t *pDma_st, veri_paketi_t *pVeri_pkt)
         if(indeks_u16 == PAKETLEME_MAKS_SAYISI)
         {
             veri_paketle(buffer, PAKETLEME_MAKS_SAYISI, pVeri_pkt);
+            Lora_paketle(pVeri_pkt, pLora_st);
 
-            pDma_st->gonderilecekVeriSayisi_u16 = indeks_u16 + PROTOKOL_FAZLALIK + LORA_E22_FAZLALIK;
-            pVeri_pkt->paket_hazir_u8 = 1;
+            pLora_st->paket_hazir_u8 = 1;
             indeks_u16 = 0;
         }
     }
@@ -206,9 +216,9 @@ void Lora_veri_gonderme_cevrimi(Dma_t *pDma_st, veri_paketi_t *pVeri_pkt)
     if(indeks_u16 > 0)
     {
         veri_paketle(buffer, indeks_u16, pVeri_pkt);
+        Lora_paketle(pVeri_pkt, pLora_st);
 
-        pDma_st->gonderilecekVeriSayisi_u16 = indeks_u16 + PROTOKOL_FAZLALIK + LORA_E22_FAZLALIK;
-        pVeri_pkt->paket_hazir_u8 = 1;
+        pLora_st->paket_hazir_u8 = 1;
         indeks_u16 = 0;
     }
 }

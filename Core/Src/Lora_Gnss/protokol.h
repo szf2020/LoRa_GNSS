@@ -24,13 +24,11 @@ typedef struct
 	uint32_t yakalanan_paket_u32;
 	uint16_t crc_u16;
 	uint32_t hatali_paket_u32;
-	uint8_t  paket_hazir_u8;
 }veri_paketi_t;
 
 
 typedef enum
 {
-	LORA_KANAL_ATAMA,
 	BASLANGIC_BAYT_1,
 	BASLANGIC_BAYT_2,
 	UZUNLUK,
@@ -39,6 +37,16 @@ typedef enum
 	CRC_LSB,
 	DURUM_SAYISI
 }paket_isimleri;
+
+
+typedef struct
+{
+	 uint8_t adres_u8;
+	 uint8_t kanal_u8;
+	 uint8_t data[LORA_E22_MAKS_BOYUT];
+	 uint8_t veri_boyutu_u8;
+	 uint8_t paket_hazir_u8;
+}Lora_t;
 
 
 static const uint16_t ccitt_hash[] = {
@@ -84,7 +92,9 @@ void veri_paket_coz( Dma_t *pDma_st, veri_paketi_t *veri_pkt );
 
 void Lora_veri_alma_cevrimi(Dma_t *pDma_st, veri_paketi_t *pVeri_pkt);
 
-void Lora_veri_gonderme_cevrimi(Dma_t *pDma_st, veri_paketi_t *pVeri_pkt);
+void Lora_veri_gonderme_cevrimi(Dma_t *pDma_st, veri_paketi_t *pVeri_pkt, Lora_t *pLora_st);
+
+void Lora_paketle(veri_paketi_t *pVeri_pkt, Lora_t *pLora_st);
 
 uint16_t crc16_ccitt(const uint8_t* buffer, size_t size);
 
