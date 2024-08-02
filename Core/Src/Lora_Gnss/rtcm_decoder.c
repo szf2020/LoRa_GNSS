@@ -32,13 +32,14 @@ uint32_t compute_crc24q(const uint8_t *buffer, int length)
 }
 
 
+
 // RTCM v3 Message Parser State Machine
 void parse_rtcm_v3_message(uint8_t *data, int data_length) {
     static rtcm_state_t state = STATE_PREAMBLE;
     static uint16_t length = 0;
     static uint16_t index = 0;
     static uint8_t message[1024];
-    static uint32_t crc = 0;
+    uint32_t crc = 0;
 
     for (int i = 0; i < data_length; i++) {
         uint8_t byte = data[i];
@@ -82,9 +83,9 @@ void parse_rtcm_v3_message(uint8_t *data, int data_length) {
             case STATE_CRC:
             {
                 message[index++] = byte;
-                if (index == (3 + length + 3)) {  // 3 bytes header + message length + 3 bytes CRC
+                if ((index) == (3 + length + 3)) {  // 3 bytes header + message length + 3 bytes CRC
                     crc = (message[index-3] << 16) | (message[index-2] << 8) | message[index-1];
-                    uint32_t computed_crc = compute_crc24q(message, 3 + length);
+                     uint32_t computed_crc = compute_crc24q(message, 3 + length);
 
                     if (crc == computed_crc) {
                         memcpy(Glo_st.rtcm_st.rtcm_buffer, message, index);
@@ -92,7 +93,87 @@ void parse_rtcm_v3_message(uint8_t *data, int data_length) {
                     } else {
                         Glo_st.rtcm_st.rtcm_mesaj_geldi_u8 = 0;
                     }
+
                     state = STATE_PREAMBLE;
+                    length = 0;
+                    index = 0;
+                    memset(message, 0, sizeof(message)); // Reset the buffer
+                }
+                break;
+            }
+        }
+    }
+}
+
+
+void parse_rtcm_v3_message_while(Dma_t *pDma_st)
+{
+    static rtcm_state_t state = STATE_PREAMBLE;
+    static uint16_t length = 0;
+    static uint16_t index = 0;
+    static uint8_t message[1024];
+    uint32_t crc = 0;
+
+	while(pDma_st->okunanVeriSayisi_u16 > 0)
+	{
+		uint8_t byte = RingBufferdanVeriOku(pDma_st);
+
+        switch (state) {
+            case STATE_PREAMBLE:
+            {
+                if (byte == 0xD3) {
+                    state = STATE_LENGTH;
+                    length = 0;
+                    index = 0;
+                    crc = 0;
+                    message[index++] = byte;
+                }
+                break;
+            }
+
+            case STATE_LENGTH:
+            {
+                if (index == 1) {
+                    length = (byte & 0x03) << 8; // İlk byte'ı uzunluğun yüksek 8 bitine yerleştir
+                } else if (index == 2) {
+                    length |= byte; // İkinci byte'ı uzunluğun düşük 8 bitine yerleştir
+                }
+                message[index++] = byte;
+                if (index == 3) {
+                    state = STATE_MESSAGE;
+                }
+                break;
+            }
+
+            case STATE_MESSAGE:
+            {
+                message[index++] = byte;
+                if (index == (3 + length)) {  // 3 bytes header + message length
+                    state = STATE_CRC;
+                }
+                break;
+            }
+
+            case STATE_CRC:
+            {
+                message[index++] = byte;
+                if ((index) == (3 + length + 3)) {  // 3 bytes header + message length + 3 bytes CRC
+                    crc = (message[index-3] << 16) | (message[index-2] << 8) | message[index-1];
+                     uint32_t computed_crc = compute_crc24q(message, 3 + length);
+
+                    if (crc == computed_crc) {
+                        memcpy(Glo_st.rtcm_st.rtcm_buffer, message, index);
+                        Glo_st.rtcm_st.basarili_mesaj_u32++;
+                        Glo_st.rtcm_st.rtcm_mesaj_geldi_u8 = 1;
+                    } else {
+                        Glo_st.rtcm_st.rtcm_mesaj_geldi_u8 = 0;
+                        Glo_st.rtcm_st.crc_hatali_mesaj_u32++;
+                    }
+
+                    state = STATE_PREAMBLE;
+                    length = 0;
+                    index = 0;
+                    memset(message, 0, sizeof(message)); // Reset the buffer
                 }
                 break;
             }

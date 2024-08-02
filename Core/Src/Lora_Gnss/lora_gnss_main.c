@@ -24,7 +24,12 @@ void loraGnssMain()
 		if(1 == Glo_st._100HzFlag_u8)
 		{
 //			Lora_veri_gonderme_cevrimi(&Glo_st.usartDma3_st, &Glo_st.veri_pkt_st, &Glo_st.lora_st);
-			Lora_veri_alma_cevrimi(&Glo_st.usartDma3_st, &Glo_st.veri_pkt_st);
+//			Lora_veri_alma_cevrimi(&Glo_st.usartDma3_st, &Glo_st.veri_pkt_st);
+
+			if(Glo_st.usartDma3_st.okunanVeriSayisi_u16 > 0)
+			{
+				parse_rtcm_v3_message_while(&Glo_st.usartDma3_st);
+			}
 
 			if(Glo_st.lora_st.paket_hazir_u8)
 			{
