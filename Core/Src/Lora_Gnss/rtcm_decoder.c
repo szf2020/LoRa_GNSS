@@ -106,7 +106,7 @@ void parse_rtcm_v3_message(uint8_t *data, int data_length) {
 }
 
 
-void parse_rtcm_v3_message_while(Dma_t *pDma_st)
+void parse_rtcm_v3_message_while(Dma_t *pDma_st, Rtcm_t *pRtcm_st)
 {
     static rtcm_state_t state = STATE_PREAMBLE;
     static uint16_t length = 0;
@@ -157,23 +157,26 @@ void parse_rtcm_v3_message_while(Dma_t *pDma_st)
             case STATE_CRC:
             {
                 message[index++] = byte;
-                if ((index) == (3 + length + 3)) {  // 3 bytes header + message length + 3 bytes CRC
+                if ((index) == (3 + length + 3))
+                {  // 3 bytes header + message length + 3 bytes CRC
                     crc = (message[index-3] << 16) | (message[index-2] << 8) | message[index-1];
-                     uint32_t computed_crc = compute_crc24q(message, 3 + length);
+                    uint32_t computed_crc = compute_crc24q(message, 3 + length);
 
-                    if (crc == computed_crc) {
-                        memcpy(Glo_st.rtcm_st.rtcm_buffer, message, index);
-                        Glo_st.rtcm_st.basarili_mesaj_u32++;
-                        Glo_st.rtcm_st.rtcm_mesaj_geldi_u8 = 1;
-                    } else {
-                        Glo_st.rtcm_st.rtcm_mesaj_geldi_u8 = 0;
-                        Glo_st.rtcm_st.crc_hatali_mesaj_u32++;
+                    if (crc == computed_crc)
+                    {
+                        memcpy(pRtcm_st->rtcm_buffer, message, index);
+                        pRtcm_st->basarili_mesaj_u32++;
+                        pRtcm_st->rtcm_mesaj_geldi_u8 = 1;
+                    }
+                    else
+                    {
+                    	pRtcm_st->rtcm_mesaj_geldi_u8 = 0;
+                    	pRtcm_st->crc_hatali_mesaj_u32++;
                     }
 
                     state = STATE_PREAMBLE;
                     length = 0;
                     index = 0;
-                    memset(message, 0, sizeof(message)); // Reset the buffer
                 }
                 break;
             }
