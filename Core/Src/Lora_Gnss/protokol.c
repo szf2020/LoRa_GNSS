@@ -144,7 +144,7 @@ void veri_paket_coz(Dma_t *pDma_st, veri_paketi_t *veri_pkt )
 
 				if(veri_pkt->crc_u16 == crc16_ccitt(veri_pkt->data, indeks_u16))
 				{
-					parse_rtcm_v3_message(veri_pkt->data, indeks_u16);
+					parse_rtcm_v3_message(veri_pkt->data, indeks_u16, &Glo_st.rtcm_st);
 					veri_pkt->yakalanan_paket_u32++;
 				}
 				else
@@ -203,7 +203,7 @@ void Lora_veri_gonderme_cevrimi(Dma_t *pDma_st, veri_paketi_t *pVeri_pkt, Lora_t
     {
         buffer[indeks_u16++] = RingBufferdanVeriOku(pDma_st);
 
-        if(indeks_u16 >= PAKETLEME_MAKS_SAYISI)
+        if(indeks_u16 == PAKETLEME_MAKS_SAYISI)
         {
             veri_paketle(buffer, PAKETLEME_MAKS_SAYISI, pVeri_pkt);
             Lora_paketle(pVeri_pkt, pLora_st);

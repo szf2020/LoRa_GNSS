@@ -25,11 +25,12 @@ typedef struct
 	uint32_t crc_hatali_mesaj_u32;
 	uint8_t rtcm_mesaj_geldi_u8;
 	uint8_t rtcm_buffer[1024];
+	uint16_t veri_boyutu_u16;
 }Rtcm_t;
 
 uint32_t compute_crc24q(const uint8_t *buffer, int length);
 
-void parse_rtcm_v3_message(uint8_t *data, int data_length);
+void parse_rtcm_v3_message(uint8_t *data, int data_length, Rtcm_t *pRtcm_st);
 
 void parse_rtcm_v3_message_while(Dma_t *pDma_st, Rtcm_t *pRtcm_st);
 
