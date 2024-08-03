@@ -46,6 +46,8 @@ uint8_t RingBufferdanVeriOku(Dma_t *pDma_st);
 
 void RingBufferYaz(Dma_t *pDma_st, uint16_t boyut_u16);
 
+void DmaVeriGonder(Dma_t *pDma_st, uint8_t *pBuffer, uint16_t boyut_u16);
+
 void DmaRxKesme(Dma_t *pDma_st, uint16_t boyut_u16);
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size);

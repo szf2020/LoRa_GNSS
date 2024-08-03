@@ -1,6 +1,7 @@
-../Core/Src/Lora_Gnss/uart_dma.c:16:6:UartDmaInit	1
-../Core/Src/Lora_Gnss/uart_dma.c:28:9:RingBufferdanVeriOku	2
-../Core/Src/Lora_Gnss/uart_dma.c:48:6:RingBufferYaz	2
-../Core/Src/Lora_Gnss/uart_dma.c:71:6:DmaRxKesme	1
-../Core/Src/Lora_Gnss/uart_dma.c:88:6:HAL_UARTEx_RxEventCallback	4
-../Core/Src/Lora_Gnss/uart_dma.c:104:6:HAL_UART_TxCpltCallback	4
+../Core/Src/Lora_Gnss/uart_dma.c:17:6:UartDmaInit	1
+../Core/Src/Lora_Gnss/uart_dma.c:29:9:RingBufferdanVeriOku	2
+../Core/Src/Lora_Gnss/uart_dma.c:49:6:RingBufferYaz	2
+../Core/Src/Lora_Gnss/uart_dma.c:72:6:DmaVeriGonder	2
+../Core/Src/Lora_Gnss/uart_dma.c:84:6:DmaRxKesme	1
+../Core/Src/Lora_Gnss/uart_dma.c:101:6:HAL_UARTEx_RxEventCallback	4
+../Core/Src/Lora_Gnss/uart_dma.c:117:6:HAL_UART_TxCpltCallback	4

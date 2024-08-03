@@ -9,6 +9,7 @@
 #include "uart_dma.h"
 #include "lora_gnss_main.h"
 #include <string.h>
+#include "main.h"
 
 
 
@@ -65,6 +66,18 @@ void RingBufferYaz(Dma_t *pDma_st, uint16_t boyut_u16)
     }
 
     pDma_st->okunanVeriSayisi_u16 += boyut_u16;
+}
+
+
+void DmaVeriGonder(Dma_t *pDma_st, uint8_t *pBuffer, uint16_t boyut_u16)
+{
+	if(pDma_st->txCallBackFlag_u8)
+	{
+		HAL_UART_Transmit_DMA(pDma_st->pUart, pBuffer, boyut_u16);
+		HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+
+		pDma_st->txCallBackFlag_u8 = 0;
+	}
 }
 
 

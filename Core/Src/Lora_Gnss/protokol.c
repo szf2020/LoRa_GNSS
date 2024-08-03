@@ -203,12 +203,14 @@ void Lora_veri_gonderme_cevrimi(Dma_t *pDma_st, veri_paketi_t *pVeri_pkt, Lora_t
     {
         buffer[indeks_u16++] = RingBufferdanVeriOku(pDma_st);
 
-        if(indeks_u16 == PAKETLEME_MAKS_SAYISI)
+        if(indeks_u16 >= PAKETLEME_MAKS_SAYISI)
         {
             veri_paketle(buffer, PAKETLEME_MAKS_SAYISI, pVeri_pkt);
             Lora_paketle(pVeri_pkt, pLora_st);
 
-            pLora_st->paket_hazir_u8 = 1;
+            DmaVeriGonder(pDma_st, pLora_st->data, pLora_st->veri_boyutu_u8);
+
+//            pLora_st->paket_hazir_u8 = 1;
             indeks_u16 = 0;
         }
     }
@@ -218,7 +220,9 @@ void Lora_veri_gonderme_cevrimi(Dma_t *pDma_st, veri_paketi_t *pVeri_pkt, Lora_t
         veri_paketle(buffer, indeks_u16, pVeri_pkt);
         Lora_paketle(pVeri_pkt, pLora_st);
 
-        pLora_st->paket_hazir_u8 = 1;
+        DmaVeriGonder(pDma_st, pLora_st->data, pLora_st->veri_boyutu_u8);
+
+//        pLora_st->paket_hazir_u8 = 1;
         indeks_u16 = 0;
     }
 }

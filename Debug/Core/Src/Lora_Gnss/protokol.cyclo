@@ -3,4 +3,4 @@
 ../Core/Src/Lora_Gnss/protokol.c:167:10:crc16_ccitt	2
 ../Core/Src/Lora_Gnss/protokol.c:179:6:Lora_paketle	2
 ../Core/Src/Lora_Gnss/protokol.c:197:6:Lora_veri_gonderme_cevrimi	4
-../Core/Src/Lora_Gnss/protokol.c:228:6:Lora_veri_alma_cevrimi	1
+../Core/Src/Lora_Gnss/protokol.c:232:6:Lora_veri_alma_cevrimi	1
