@@ -17,17 +17,17 @@ void loraGnssMain()
 		UartDmaInit(&huart2, &hdma_usart2_rx, &Glo_st.usartDma2_st);
 		UartDmaInit(&huart3, &hdma_usart3_rx, &Glo_st.usartDma3_st);
 
-		Glo_st.lora_st.adres_u8 = 0x02;
-		Glo_st.lora_st.kanal_u8 = 0x05;
+		Glo_st.lora_st.adres_u8 = 0x01;
+		Glo_st.lora_st.kanal_u8 = 0x04;
 
 	while(1)
 	{
-		if(1 == Glo_st._50HzFlag_u8)
+		if(1 == Glo_st._100HzFlag_u8)
 		{
 //			Lora_veri_gonderme_cevrimi(&Glo_st.usartDma2_st, &Glo_st.veri_pkt_st, &Glo_st.lora_st);
 			Lora_veri_alma_cevrimi(&Glo_st.usartDma3_st, &Glo_st.veri_pkt_st);
 
-			Glo_st._50HzFlag_u8 = 0;
+			Glo_st._100HzFlag_u8 = 0;
 		}
 
 	}
