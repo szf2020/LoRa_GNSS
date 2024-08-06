@@ -102,7 +102,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
 	if (huart->Instance == USART1)
 	{
-		DmaRxKesme(&Glo_st.usartDma1_st, Size);
+//		DmaRxKesme(&Glo_st.usartDma1_st, Size);
 	}
 	if (huart->Instance == USART2)
 	{
@@ -118,7 +118,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if (huart->Instance == USART1)
 	{
-		Glo_st.usartDma1_st.txCallBackFlag_u8 = 1;
+//		Glo_st.usartDma1_st.txCallBackFlag_u8 = 1;
 	}
 	if (huart->Instance == USART2)
 	{

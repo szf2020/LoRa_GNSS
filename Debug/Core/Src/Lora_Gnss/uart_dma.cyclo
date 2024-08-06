@@ -3,5 +3,5 @@
 ../Core/Src/Lora_Gnss/uart_dma.c:49:6:RingBufferYaz	2
 ../Core/Src/Lora_Gnss/uart_dma.c:72:6:DmaVeriGonder	2
 ../Core/Src/Lora_Gnss/uart_dma.c:84:6:DmaRxKesme	1
-../Core/Src/Lora_Gnss/uart_dma.c:101:6:HAL_UARTEx_RxEventCallback	4
-../Core/Src/Lora_Gnss/uart_dma.c:117:6:HAL_UART_TxCpltCallback	4
+../Core/Src/Lora_Gnss/uart_dma.c:101:6:HAL_UARTEx_RxEventCallback	3
+../Core/Src/Lora_Gnss/uart_dma.c:117:6:HAL_UART_TxCpltCallback	3

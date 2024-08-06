@@ -196,35 +196,59 @@ void Lora_paketle(veri_paketi_t *pVeri_pkt, Lora_t *pLora_st)
 
 void Lora_veri_gonderme_cevrimi(Dma_t *pDma_st, veri_paketi_t *pVeri_pkt, Lora_t *pLora_st)
 {
-    uint8_t buffer[PAKETLEME_MAKS_SAYISI + PROTOKOL_FAZLALIK + LORA_E22_FAZLALIK] = {0};
-    static uint16_t indeks_u16 = 0;
+    uint8_t buffer[200] = {0};
+    uint8_t paket_hazir_u8 = 0;
+    uint8_t limit_asimi_u8 = 0;
+    uint16_t indeks_u16 = 0;
 
     while(pDma_st->okunanVeriSayisi_u16 > 0)
     {
-        buffer[indeks_u16++] = RingBufferdanVeriOku(pDma_st);
+    	if(indeks_u16 >= sizeof(buffer))
+    	{
+    		limit_asimi_u8 = 1;
+    		paket_hazir_u8 = 0;
+    		break;
+    	}
+    	else
+    	{
+            buffer[indeks_u16++] = RingBufferdanVeriOku(pDma_st);
+            paket_hazir_u8 = 1;
+            limit_asimi_u8 = 0;
+    	}
 
-        if(indeks_u16 == PAKETLEME_MAKS_SAYISI)
-        {
-            veri_paketle(buffer, PAKETLEME_MAKS_SAYISI, pVeri_pkt);
-            Lora_paketle(pVeri_pkt, pLora_st);
-
-            DmaVeriGonder(&Glo_st.usartDma3_st, pLora_st->data, pLora_st->veri_boyutu_u8);
-
-//            pLora_st->paket_hazir_u8 = 1;
-            indeks_u16 = 0;
-        }
     }
-
-    if(indeks_u16 > 0)
+//        if(indeks_u16 == PAKETLEME_MAKS_SAYISI)
+//        {
+    if((pDma_st->okunanVeriSayisi_u16 == 0) && (paket_hazir_u8 == 1))
     {
-        veri_paketle(buffer, indeks_u16, pVeri_pkt);
-        Lora_paketle(pVeri_pkt, pLora_st);
+    	veri_paketle(buffer, indeks_u16, pVeri_pkt);
+		Lora_paketle(pVeri_pkt, pLora_st);
 
-        DmaVeriGonder(&Glo_st.usartDma3_st, pLora_st->data, pLora_st->veri_boyutu_u8);
-
-//        pLora_st->paket_hazir_u8 = 1;
-        indeks_u16 = 0;
+		DmaVeriGonder(&Glo_st.usartDma3_st, pLora_st->data, pLora_st->veri_boyutu_u8);
+		paket_hazir_u8 = 0;
     }
+    else if((limit_asimi_u8 == 1) && (paket_hazir_u8 == 0))
+    {
+    	veri_paketle(buffer, indeks_u16, pVeri_pkt);
+		Lora_paketle(pVeri_pkt, pLora_st);
+
+		DmaVeriGonder(&Glo_st.usartDma3_st, pLora_st->data, pLora_st->veri_boyutu_u8);
+		limit_asimi_u8 = 0;
+    }
+//            pLora_st->paket_hazir_u8 = 1;
+//        }
+//    }
+
+//    if(indeks_u16 > 0)
+//    {
+//        veri_paketle(buffer, indeks_u16, pVeri_pkt);
+//        Lora_paketle(pVeri_pkt, pLora_st);
+//
+//        DmaVeriGonder(&Glo_st.usartDma3_st, pLora_st->data, pLora_st->veri_boyutu_u8);
+//
+////        pLora_st->paket_hazir_u8 = 1;
+//        indeks_u16 = 0;
+//    }
 }
 
 

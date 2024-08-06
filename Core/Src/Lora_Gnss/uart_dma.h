@@ -12,8 +12,8 @@
 #include "stm32f1xx_hal.h"
 
 
-#define RING_BUFFER_BOYUT   2048U
-#define RX_BUFFER_BOYUT     2048U
+#define RING_BUFFER_BOYUT   2048
+#define RX_BUFFER_BOYUT     4096
 #define TX_BUFFER_BOYUT     1024U
 
 

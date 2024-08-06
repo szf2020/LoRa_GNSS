@@ -28,7 +28,6 @@ typedef struct
 	uint8_t _100HzFlag_u8;
 	uint8_t _200HzFlag_u8;
 
-	Dma_t usartDma1_st;
 	Dma_t usartDma2_st;
 	Dma_t usartDma3_st;
 
